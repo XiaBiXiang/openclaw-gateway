@@ -1,0 +1,17 @@
+services:
+  gateway:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: openclaw-gateway:local
+    container_name: openclaw-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      RAYINCODE_API_KEY: ${RAYINCODE_API_KEY:-}
+    volumes:
+      - ../configs/config.example.json:/app/config.json:ro
+    command: ["-config", "/app/config.json"]
+    restart: unless-stopped
+

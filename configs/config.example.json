@@ -1,0 +1,45 @@
+{
+  "version": "v1",
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8080,
+    "read_timeout": "10s",
+    "write_timeout": "60s"
+  },
+  "routing": {
+    "default_mode": "local",
+    "sticky_ttl": "30m",
+    "cloud_dwell_time": "15m",
+    "complexity_threshold": 0.75,
+    "confidence_threshold": 0.55,
+    "local_context_limit": 8192,
+    "offline_force_local": true
+  },
+  "providers": {
+    "local": {
+      "enabled": true,
+      "type": "openclaw",
+      "api": "chat-completions",
+      "base_url": "http://127.0.0.1:11434/v1",
+      "model": "openclaw-local",
+      "timeout": "12s",
+      "retry_attempts": 0,
+      "retry_backoff": "0s"
+    },
+    "cloud": {
+      "enabled": true,
+      "type": "openai-compatible",
+      "api": "responses",
+      "base_url": "https://api.openai.com/v1",
+      "model": "gpt-4.1",
+      "api_key_env": "OPENAI_API_KEY",
+      "timeout": "45s",
+      "retry_attempts": 2,
+      "retry_backoff": "300ms"
+    }
+  },
+  "observability": {
+    "log_level": "info",
+    "decision_log": true
+  }
+}

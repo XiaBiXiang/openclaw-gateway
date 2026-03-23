@@ -1,0 +1,9 @@
+.DS_Store
+.env
+bin/
+dist/
+release/
+coverage.out
+*.log
+configs/*.local.json
+

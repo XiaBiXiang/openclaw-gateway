@@ -1,0 +1,31 @@
+name: Feature Request
+description: Propose a new routing, protocol, operability, or packaging feature.
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem or operator pain point are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the change you want to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Explain why the current flow or an external plugin is not enough.
+  - type: textarea
+    id: impact
+    attributes:
+      label: Compatibility Impact
+      description: Note any config, API, or deployment compatibility concerns.
+

@@ -238,6 +238,7 @@ scripts                本地模型与网关启动脚本
 - 安装说明: [docs/install.md](docs/install.md)
 - OpenClaw 接入: [docs/openclaw.md](docs/openclaw.md)
 - 架构说明: [docs/architecture.md](docs/architecture.md)
+- 演示页面: [docs/presentation.html](docs/presentation.html)
 - 路线图: [docs/roadmap.md](docs/roadmap.md)
 
 ## 开源发布相关

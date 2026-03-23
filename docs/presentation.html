@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenClaw Gateway Presentation</title>
+  <style>
+    :root {
+      --bg: #0d1b1f;
+      --panel: rgba(14, 27, 31, 0.72);
+      --panel-strong: rgba(12, 22, 26, 0.9);
+      --card: rgba(244, 239, 230, 0.08);
+      --line: rgba(244, 239, 230, 0.16);
+      --text: #f4efe6;
+      --muted: rgba(244, 239, 230, 0.7);
+      --accent: #ff8a5b;
+      --accent-soft: #ffd3b8;
+      --sea: #81d6c9;
+      --gold: #f5c76d;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --font-display: "Iowan Old Style", "Palatino Linotype", "Songti SC", serif;
+      --font-sans: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(255, 138, 91, 0.22), transparent 32%),
+        radial-gradient(circle at 90% 18%, rgba(129, 214, 201, 0.18), transparent 28%),
+        radial-gradient(circle at 70% 82%, rgba(245, 199, 109, 0.1), transparent 30%),
+        linear-gradient(140deg, #091217 0%, #10272f 42%, #1d2327 100%);
+      color: var(--text);
+      font-family: var(--font-sans);
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(24px);
+      opacity: 0.6;
+    }
+
+    body::before {
+      width: 22rem;
+      height: 22rem;
+      top: 8%;
+      right: 12%;
+      border-radius: 50%;
+      background: rgba(255, 138, 91, 0.18);
+    }
+
+    body::after {
+      width: 26rem;
+      height: 26rem;
+      left: -6rem;
+      bottom: -8rem;
+      border-radius: 50%;
+      background: rgba(129, 214, 201, 0.14);
+    }
+
+    .deck-shell {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    .rail {
+      padding: 28px 18px 28px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid rgba(244, 239, 230, 0.08);
+      background: linear-gradient(180deg, rgba(8, 18, 21, 0.62), rgba(8, 18, 21, 0.28));
+      backdrop-filter: blur(16px);
+    }
+
+    .rail-brand {
+      display: grid;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(135deg, rgba(255, 138, 91, 0.9), rgba(255, 211, 184, 0.24)),
+        rgba(255, 255, 255, 0.06);
+      color: #10171a;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      box-shadow: var(--shadow);
+    }
+
+    .brand-caption {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      color: rgba(244, 239, 230, 0.72);
+      text-transform: uppercase;
+    }
+
+    .rail-nav {
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+    }
+
+    .rail-dot {
+      width: 14px;
+      height: 14px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(244, 239, 230, 0.22);
+      cursor: pointer;
+      transition: transform 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .rail-dot:hover,
+    .rail-dot:focus-visible {
+      transform: scale(1.18);
+      background: rgba(244, 239, 230, 0.38);
+      outline: none;
+    }
+
+    .rail-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 0 8px rgba(255, 138, 91, 0.14);
+      transform: scale(1.12);
+    }
+
+    .rail-hint {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      color: rgba(244, 239, 230, 0.62);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .rail-hint span {
+      padding: 7px 9px;
+      border: 1px solid rgba(244, 239, 230, 0.12);
+      border-radius: 999px;
+      background: rgba(244, 239, 230, 0.04);
+    }
+
+    .viewport {
+      position: relative;
+      padding: 22px 24px 24px;
+      overflow: hidden;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      border: 1px solid rgba(244, 239, 230, 0.08);
+      border-radius: 999px;
+      background: rgba(7, 16, 19, 0.42);
+      backdrop-filter: blur(18px);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(244, 239, 230, 0.68);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--sea);
+      box-shadow: 0 0 0 6px rgba(129, 214, 201, 0.14);
+    }
+
+    .slide-title {
+      text-align: center;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      color: rgba(244, 239, 230, 0.86);
+    }
+
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 112px;
+      justify-content: flex-end;
+      color: rgba(244, 239, 230, 0.72);
+      font-size: 13px;
+    }
+
+    .counter-strong {
+      font-family: var(--font-display);
+      font-size: 22px;
+      color: var(--accent-soft);
+    }
+
+    .deck {
+      position: relative;
+      min-height: calc(100vh - 126px);
+      border-radius: 40px;
+      overflow: hidden;
+      border: 1px solid rgba(244, 239, 230, 0.08);
+      background:
+        linear-gradient(180deg, rgba(13, 27, 31, 0.84), rgba(13, 27, 31, 0.7)),
+        rgba(255, 255, 255, 0.02);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: clamp(26px, 4vw, 56px);
+      display: grid;
+      gap: 26px;
+      opacity: 0;
+      transform: translateX(12%) scale(0.985);
+      transition:
+        opacity 360ms ease,
+        transform 540ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .slide.before {
+      transform: translateX(-14%) scale(0.98);
+    }
+
+    .slide.after {
+      transform: translateX(14%) scale(0.98);
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: auto -8% -12% auto;
+      width: 30rem;
+      height: 30rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 138, 91, 0.18), transparent 58%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .slide-grid {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: repeat(12, 1fr);
+      align-items: start;
+    }
+
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-7 { grid-column: span 7; }
+    .span-6 { grid-column: span 6; }
+    .span-5 { grid-column: span 5; }
+    .span-4 { grid-column: span 4; }
+
+    .kicker {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: rgba(244, 239, 230, 0.62);
+    }
+
+    .headline {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: clamp(40px, 6.2vw, 84px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      max-width: 10ch;
+    }
+
+    .headline .accent {
+      color: var(--accent-soft);
+    }
+
+    .lead {
+      margin: 0;
+      font-size: clamp(17px, 2.1vw, 24px);
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 38rem;
+    }
+
+    .glass {
+      position: relative;
+      padding: 22px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(244, 239, 230, 0.1);
+      background:
+        linear-gradient(180deg, rgba(244, 239, 230, 0.08), rgba(244, 239, 230, 0.03)),
+        rgba(255, 255, 255, 0.02);
+      overflow: hidden;
+    }
+
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+      opacity: 0.4;
+    }
+
+    .hero-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(244, 239, 230, 0.06);
+      border: 1px solid rgba(244, 239, 230, 0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 34px;
+      line-height: 1;
+      color: var(--accent-soft);
+      margin-bottom: 10px;
+    }
+
+    .stat span {
+      color: rgba(244, 239, 230, 0.72);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .token-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 239, 230, 0.12);
+      background: rgba(244, 239, 230, 0.05);
+      color: rgba(244, 239, 230, 0.82);
+      font-size: 14px;
+    }
+
+    .token::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .mini-title {
+      margin: 0 0 14px;
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(244, 239, 230, 0.58);
+    }
+
+    .feature-list,
+    .compact-list,
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .feature-list li,
+    .compact-list li {
+      display: grid;
+      gap: 8px;
+      padding: 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(244, 239, 230, 0.08);
+      background: rgba(244, 239, 230, 0.05);
+    }
+
+    .feature-list strong,
+    .compact-list strong {
+      font-size: 18px;
+      color: var(--accent-soft);
+    }
+
+    .feature-list span,
+    .compact-list span {
+      color: rgba(244, 239, 230, 0.72);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .architecture {
+      display: grid;
+      gap: 18px;
+    }
+
+    .pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pipeline-step {
+      position: relative;
+      padding: 16px 18px;
+      min-width: 140px;
+      border-radius: 22px;
+      background: rgba(244, 239, 230, 0.06);
+      border: 1px solid rgba(244, 239, 230, 0.1);
+      text-align: center;
+    }
+
+    .pipeline-step strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      color: var(--accent-soft);
+    }
+
+    .pipeline-step span {
+      font-size: 13px;
+      color: rgba(244, 239, 230, 0.68);
+    }
+
+    .pipeline-arrow {
+      font-size: 26px;
+      color: rgba(244, 239, 230, 0.4);
+    }
+
+    .diagram {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr 0.9fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .diagram-column {
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(244, 239, 230, 0.08);
+      background: rgba(244, 239, 230, 0.04);
+      min-height: 240px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .diagram-column strong {
+      font-size: 18px;
+      color: var(--accent-soft);
+    }
+
+    .diagram-column p {
+      margin: 0;
+      color: rgba(244, 239, 230, 0.72);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .diagram-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(129, 214, 201, 0.12);
+      color: var(--sea);
+      font-size: 13px;
+      letter-spacing: 0.06em;
+    }
+
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .signal-card {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(244, 239, 230, 0.05);
+      border: 1px solid rgba(244, 239, 230, 0.1);
+    }
+
+    .signal-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+      color: var(--sea);
+    }
+
+    .signal-card p {
+      margin: 0;
+      color: rgba(244, 239, 230, 0.74);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    .decision-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .strip-item {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255, 138, 91, 0.1);
+      border: 1px solid rgba(255, 138, 91, 0.18);
+      color: rgba(244, 239, 230, 0.86);
+      font-size: 14px;
+    }
+
+    .code-panel {
+      font-family: "SFMono-Regular", "JetBrains Mono", "Fira Code", Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.75;
+      color: #f6ddce;
+      background:
+        linear-gradient(180deg, rgba(8, 13, 16, 0.88), rgba(8, 13, 16, 0.7)),
+        rgba(0, 0, 0, 0.24);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(244, 239, 230, 0.1);
+      padding: 22px;
+      overflow: auto;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .code-panel .comment {
+      color: #8da8a4;
+    }
+
+    .code-panel .key {
+      color: #ffd3b8;
+    }
+
+    .code-panel .value {
+      color: #81d6c9;
+    }
+
+    .deployment-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .deploy-card {
+      padding: 20px;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(244, 239, 230, 0.08);
+      background: rgba(244, 239, 230, 0.05);
+      display: grid;
+      gap: 16px;
+    }
+
+    .deploy-card strong {
+      font-size: 22px;
+      color: var(--accent-soft);
+      font-family: var(--font-display);
+    }
+
+    .deploy-card p {
+      margin: 0;
+      color: rgba(244, 239, 230, 0.72);
+      line-height: 1.65;
+    }
+
+    .deploy-card code {
+      display: block;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(7, 16, 19, 0.56);
+      border: 1px solid rgba(244, 239, 230, 0.08);
+      color: #f6ddce;
+      font-family: "SFMono-Regular", "JetBrains Mono", "Fira Code", Consolas, monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .timeline {
+      gap: 18px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 18px 18px 18px 26px;
+      border-left: 1px solid rgba(244, 239, 230, 0.18);
+      background: linear-gradient(90deg, rgba(244, 239, 230, 0.05), rgba(244, 239, 230, 0.02));
+      border-radius: 0 18px 18px 0;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -7px;
+      top: 22px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 7px rgba(245, 199, 109, 0.14);
+    }
+
+    .timeline-item strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+      color: var(--accent-soft);
+    }
+
+    .timeline-item p {
+      margin: 0;
+      color: rgba(244, 239, 230, 0.72);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .closing {
+      display: grid;
+      gap: 18px;
+      align-content: center;
+      min-height: 100%;
+      max-width: 58rem;
+    }
+
+    .closing .headline {
+      max-width: 12ch;
+    }
+
+    .closing-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 239, 230, 0.12);
+      background: rgba(244, 239, 230, 0.05);
+      color: rgba(244, 239, 230, 0.84);
+    }
+
+    .controls {
+      position: absolute;
+      right: 22px;
+      bottom: 22px;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(244, 239, 230, 0.1);
+      background: rgba(7, 16, 19, 0.5);
+      backdrop-filter: blur(18px);
+    }
+
+    .control-btn {
+      width: 44px;
+      height: 44px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(244, 239, 230, 0.08);
+      color: var(--text);
+      font-size: 18px;
+      cursor: pointer;
+      transition: transform 220ms ease, background 220ms ease;
+    }
+
+    .control-btn:hover,
+    .control-btn:focus-visible {
+      transform: translateY(-1px);
+      background: rgba(255, 138, 91, 0.22);
+      outline: none;
+    }
+
+    .progress {
+      width: clamp(160px, 24vw, 320px);
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(244, 239, 230, 0.08);
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--sea), var(--accent));
+      transition: width 320ms ease;
+    }
+
+    @media (max-width: 1100px) {
+      .slide-grid,
+      .diagram,
+      .deployment-grid,
+      .decision-grid,
+      .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .span-8,
+      .span-7,
+      .span-6,
+      .span-5,
+      .span-4 {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 820px) {
+      html,
+      body {
+        overflow: auto;
+      }
+
+      .deck-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .rail {
+        display: none;
+      }
+
+      .viewport {
+        padding: 12px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+        justify-items: start;
+        border-radius: 28px;
+      }
+
+      .slide-title,
+      .counter {
+        text-align: left;
+        justify-content: flex-start;
+      }
+
+      .deck {
+        min-height: calc(100vh - 124px);
+      }
+
+      .slide-grid,
+      .diagram,
+      .deployment-grid,
+      .decision-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .slide {
+        padding: 22px 18px 88px;
+        overflow: auto;
+      }
+
+      .controls {
+        left: 12px;
+        right: 12px;
+        justify-content: space-between;
+      }
+
+      .progress {
+        flex: 1;
+      }
+
+      .headline {
+        font-size: clamp(34px, 12vw, 62px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-shell">
+    <aside class="rail" aria-label="Presentation navigation">
+      <div class="rail-brand">
+        <div class="brand-mark">OCG</div>
+        <div class="brand-caption">Hybrid Inference</div>
+      </div>
+      <nav class="rail-nav" id="rail-nav"></nav>
+      <div class="rail-hint">
+        <span>←</span>
+        <span>→</span>
+        <span>Space</span>
+      </div>
+    </aside>
+
+    <div class="viewport">
+      <header class="topbar">
+        <div class="eyebrow">OpenClaw Gateway / Product Story</div>
+        <div class="slide-title" id="slide-title">封面</div>
+        <div class="counter">
+          <span class="counter-strong" id="counter-current">01</span>
+          <span id="counter-total">/ 08</span>
+        </div>
+      </header>
+
+      <main class="deck" id="deck">
+        <section class="slide active" data-title="封面">
+          <div class="slide-grid">
+            <div class="span-7 hero-stack">
+              <p class="kicker">Local First / Hybrid Routing / OpenAI Compatible</p>
+              <h1 class="headline">让 <span class="accent">本地模型</span> 和 <span class="accent">云端模型</span> 在一个入口里协同工作</h1>
+              <p class="lead">OpenClaw Gateway 不是又一个聊天壳子，而是一个放在客户端与模型之间的推理路由层。它负责在隐私、复杂度、时延和稳定性之间做出可解释的选择。</p>
+              <div class="token-cloud">
+                <div class="token">OpenClaw 接入</div>
+                <div class="token">MLX 本地模型</div>
+                <div class="token">OpenAI 兼容接口</div>
+                <div class="token">端云协同</div>
+              </div>
+            </div>
+
+            <div class="span-5 glass">
+              <p class="mini-title">Project Lens</p>
+              <div class="stats">
+                <div class="stat">
+                  <strong>2</strong>
+                  <span>对外同时兼容 `chat/completions` 与 `responses` 两类接口</span>
+                </div>
+                <div class="stat">
+                  <strong>1</strong>
+                  <span>对上层只暴露一个稳定网关入口，降低集成复杂度</span>
+                </div>
+                <div class="stat">
+                  <strong>∞</strong>
+                  <span>本地与云端 provider 可继续扩展，不锁死具体模型厂商</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="问题">
+          <div class="slide-grid">
+            <div class="span-5">
+              <p class="kicker">The Tension</p>
+              <h2 class="headline">真正难的不是接模型，而是<span class="accent">什么时候该切换</span></h2>
+            </div>
+            <div class="span-7">
+              <ul class="feature-list">
+                <li>
+                  <strong>只用本地模型</strong>
+                  <span>隐私更好，成本更可控，但复杂任务、长上下文和高质量推理很容易顶到上限。</span>
+                </li>
+                <li>
+                  <strong>只用云端模型</strong>
+                  <span>能力更强，但隐私、离线能力、响应时延和持续成本都会成为产品瓶颈。</span>
+                </li>
+                <li>
+                  <strong>客户端自己判断</strong>
+                  <span>每个客户端都要重复实现策略逻辑，协议碎片化，后续想做观测、治理和策略发布会非常痛苦。</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="方案">
+          <div class="slide-grid">
+            <div class="span-12 architecture">
+              <p class="kicker">Single Entry Strategy</p>
+              <h2 class="headline">把决策从客户端拿出来，集中到一个<span class="accent">网关层</span></h2>
+              <div class="pipeline">
+                <div class="pipeline-step">
+                  <strong>Client</strong>
+                  <span>OpenClaw / App / Service</span>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                  <strong>Gateway</strong>
+                  <span>策略判断 + 协议转换</span>
+                </div>
+                <div class="pipeline-arrow">→</div>
+                <div class="pipeline-step">
+                  <strong>Local</strong>
+                  <span>MLX / OpenAI-compatible</span>
+                </div>
+                <div class="pipeline-arrow">或</div>
+                <div class="pipeline-step">
+                  <strong>Cloud</strong>
+                  <span>OpenAI-compatible / Responses</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="span-12">
+              <div class="diagram">
+                <div class="diagram-column">
+                  <span class="diagram-badge">Client Layer</span>
+                  <strong>上层只看见一个入口</strong>
+                  <p>OpenClaw 或其他客户端不再感知背后到底有几个 provider，也不需要知道何时走本地、何时走云端。</p>
+                </div>
+                <div class="diagram-column">
+                  <span class="diagram-badge">Policy Layer</span>
+                  <strong>网关负责做选择</strong>
+                  <p>网关根据隐私、离线、复杂度、上下文长度和历史会话状态决定是否升级到云端。</p>
+                </div>
+                <div class="diagram-column">
+                  <span class="diagram-badge">Provider Layer</span>
+                  <strong>本地与云端继续解耦</strong>
+                  <p>本地 provider 和云端 provider 都通过抽象适配层接入，后面可以平滑替换具体模型来源。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="决策逻辑">
+          <div class="slide-grid">
+            <div class="span-5">
+              <p class="kicker">Routing Signals</p>
+              <h2 class="headline">策略不是拍脑袋，先做<span class="accent">可解释路由</span></h2>
+              <p class="lead">首版不追求复杂模型裁决器，而是先把影响实际效果的关键信号纳入同一个判断面。</p>
+            </div>
+            <div class="span-7">
+              <div class="decision-grid">
+                <div class="signal-card">
+                  <strong>Privacy / Sensitive</strong>
+                  <p>高隐私、高敏感场景直接强制本地，优先守住数据边界。</p>
+                </div>
+                <div class="signal-card">
+                  <strong>Offline</strong>
+                  <p>离线模式下允许强制本地，保障设备脱网时仍能继续工作。</p>
+                </div>
+                <div class="signal-card">
+                  <strong>Complexity</strong>
+                  <p>复杂任务越过阈值后自动升级到云端，避免小模型硬扛高难请求。</p>
+                </div>
+                <div class="signal-card">
+                  <strong>Context Limit</strong>
+                  <p>根据估算 token 数和本地上下文上限做预判，减少本地端无意义失败。</p>
+                </div>
+              </div>
+              <div class="glass">
+                <p class="mini-title">Stability Layer</p>
+                <div class="decision-strip">
+                  <div class="strip-item">Sticky Session: 防止路由来回抖动</div>
+                  <div class="strip-item">Cloud Dwell Time: 上云后保持一段时间</div>
+                  <div class="strip-item">Decision Endpoint: 可直接查看本次为什么这么选</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="接口">
+          <div class="slide-grid">
+            <div class="span-6">
+              <p class="kicker">Protocol Boundary</p>
+              <h2 class="headline">同一个网关，同时说两种<span class="accent">OpenAI 方言</span></h2>
+              <p class="lead">这层协议兼容非常关键。OpenClaw 偏 `responses`，很多本地服务偏 `chat/completions`，如果没有翻译层，端云协同会被接口差异卡死。</p>
+            </div>
+            <div class="span-6 code-panel" aria-label="API examples">
+<span class="comment"># Client -> Gateway</span>
+POST <span class="key">/v1/responses</span>
+POST <span class="key">/v1/chat/completions</span>
+
+<span class="comment"># Gateway -> Local</span>
+POST <span class="key">/v1/chat/completions</span>
+
+<span class="comment"># Gateway -> Cloud</span>
+POST <span class="key">/v1/responses</span>
+
+<span class="comment"># Normalization</span>
+<span class="key">HTML upstream errors</span> -> <span class="value">structured JSON errors</span>
+<span class="key">502/503/504</span> -> <span class="value">bounded retry</span>
+            </div>
+            <div class="span-12">
+              <ul class="compact-list">
+                <li>
+                  <strong>对上层应用更稳定</strong>
+                  <span>客户端只需要适配一次 Gateway，不必为本地服务和云端服务分别实现不同的请求格式。</span>
+                </li>
+                <li>
+                  <strong>对后续扩展更友好</strong>
+                  <span>后面如果要接更多本地引擎或更多云端模型厂商，改 provider 适配器比改所有客户端便宜得多。</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="落地方式">
+          <div class="slide-grid">
+            <div class="span-12">
+              <p class="kicker">Deployment Paths</p>
+              <h2 class="headline">当前已经具备三种<span class="accent">落地形态</span></h2>
+            </div>
+            <div class="span-12 deployment-grid">
+              <div class="deploy-card">
+                <strong>源码运行</strong>
+                <p>适合开发调试和改策略。直接用 Go 跑起来，最快验证路由逻辑。</p>
+                <code>go run ./cmd/gateway -config /path/to/config.json</code>
+              </div>
+              <div class="deploy-card">
+                <strong>本地二进制</strong>
+                <p>适合做个人环境稳定运行。构建后可直接作为本地网关进程使用。</p>
+                <code>go build -o bin/openclaw-gateway ./cmd/gateway</code>
+              </div>
+              <div class="deploy-card">
+                <strong>MLX + Gateway</strong>
+                <p>适合你现在的方向。一个本地模型服务，加一个自动路由网关。</p>
+                <code>MLX_MODEL=mlx-community/Qwen3-4B-Instruct-2507-4bit ./scripts/run-hybrid-stack.sh</code>
+              </div>
+            </div>
+            <div class="span-12 glass">
+              <p class="mini-title">OpenClaw Integration</p>
+              <p class="lead">OpenClaw 只要指向 `http://127.0.0.1:18080/v1` 这一层即可。后面到底走 MLX 本地模型还是云端模型，由 Gateway 自动裁决。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="路线图">
+          <div class="slide-grid">
+            <div class="span-5">
+              <p class="kicker">Roadmap</p>
+              <h2 class="headline">先做出能跑的内核，再补<span class="accent">控制面</span></h2>
+            </div>
+            <div class="span-7">
+              <div class="timeline">
+                <div class="timeline-item">
+                  <strong>Milestone 1: 可用网关</strong>
+                  <p>健康检查、路由决策、本地和云端 provider、OpenAI 兼容请求转发，先把端到端链路打通。</p>
+                </div>
+                <div class="timeline-item">
+                  <strong>Milestone 2: 可用于真实场景</strong>
+                  <p>重试、超时、粘性会话、错误规整和观测能力继续补强，让它不只是 demo，而是能承压的中间层。</p>
+                </div>
+                <div class="timeline-item">
+                  <strong>Milestone 3: 可发布</strong>
+                  <p>补齐 Docker、GitHub Actions、Release、安装文档和开源治理，让别人能直接拉下来用。</p>
+                </div>
+                <div class="timeline-item">
+                  <strong>Milestone 4: Dashboard</strong>
+                  <p>再进入控制面，包括策略编辑器、历史查看、多实例管理和策略发布，这时 dashboard 才真正有意义。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide" data-title="收束">
+          <div class="closing">
+            <p class="kicker">Closing</p>
+            <h2 class="headline">这不是一个“再包一层 API”的项目，而是你后面做智能决策产品的<span class="accent">执行底座</span></h2>
+            <p class="lead">如果后面你要做自动路由决策、端云协同、Dashboard、多实例治理，OpenClaw Gateway 现在这层就是必须先打稳的基础层。先把统一入口、可解释路由和 provider 抽象做对，后续产品才能往上长。</p>
+            <div class="closing-actions">
+              <div class="pill">统一入口</div>
+              <div class="pill">策略可解释</div>
+              <div class="pill">本地优先</div>
+              <div class="pill">云端升级</div>
+              <div class="pill">适合继续长成完整开源项目</div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <div class="controls">
+        <button class="control-btn" id="prev-btn" type="button" aria-label="上一页">←</button>
+        <div class="progress" aria-hidden="true">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <button class="control-btn" id="next-btn" type="button" aria-label="下一页">→</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const railNav = document.getElementById("rail-nav");
+    const slideTitle = document.getElementById("slide-title");
+    const counterCurrent = document.getElementById("counter-current");
+    const counterTotal = document.getElementById("counter-total");
+    const progressBar = document.getElementById("progress-bar");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+
+    let current = 0;
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let lastWheelAt = 0;
+
+    counterTotal.textContent = `/ ${String(slides.length).padStart(2, "0")}`;
+
+    slides.forEach((slide, index) => {
+      const dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "rail-dot";
+      dot.setAttribute("aria-label", `跳转到第 ${index + 1} 页`);
+      dot.addEventListener("click", () => setSlide(index));
+      railNav.appendChild(dot);
+    });
+
+    const dots = Array.from(document.querySelectorAll(".rail-dot"));
+
+    function setSlide(index, updateHash = true) {
+      current = (index + slides.length) % slides.length;
+
+      slides.forEach((slide, i) => {
+        slide.classList.remove("before", "after", "active");
+        if (i < current) slide.classList.add("before");
+        if (i > current) slide.classList.add("after");
+        if (i === current) slide.classList.add("active");
+        slide.setAttribute("aria-hidden", i === current ? "false" : "true");
+      });
+
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === current));
+      slideTitle.textContent = slides[current].dataset.title || `第 ${current + 1} 页`;
+      counterCurrent.textContent = String(current + 1).padStart(2, "0");
+      progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+      prevBtn.disabled = slides.length <= 1;
+      nextBtn.disabled = slides.length <= 1;
+
+      if (updateHash) {
+        history.replaceState(null, "", `#slide-${current + 1}`);
+      }
+    }
+
+    function nextSlide() {
+      setSlide(current + 1);
+    }
+
+    function prevSlide() {
+      setSlide(current - 1);
+    }
+
+    prevBtn.addEventListener("click", prevSlide);
+    nextBtn.addEventListener("click", nextSlide);
+
+    window.addEventListener("keydown", (event) => {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+        event.preventDefault();
+        nextSlide();
+      }
+
+      if (["ArrowLeft", "PageUp", "Backspace"].includes(event.key)) {
+        event.preventDefault();
+        prevSlide();
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault();
+        setSlide(0);
+      }
+
+      if (event.key === "End") {
+        event.preventDefault();
+        setSlide(slides.length - 1);
+      }
+
+      if (event.key.toLowerCase() === "f") {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen?.();
+        } else {
+          document.exitFullscreen?.();
+        }
+      }
+    });
+
+    window.addEventListener("touchstart", (event) => {
+      touchStartX = event.changedTouches[0].screenX;
+    }, { passive: true });
+
+    window.addEventListener("touchend", (event) => {
+      touchEndX = event.changedTouches[0].screenX;
+      const delta = touchEndX - touchStartX;
+      if (Math.abs(delta) < 42) return;
+      if (delta < 0) nextSlide();
+      if (delta > 0) prevSlide();
+    }, { passive: true });
+
+    window.addEventListener("wheel", (event) => {
+      if (window.innerWidth <= 820) return;
+      if (Math.abs(event.deltaY) < 28) return;
+      const now = Date.now();
+      if (now - lastWheelAt < 650) return;
+      lastWheelAt = now;
+      if (event.deltaY > 0) nextSlide();
+      if (event.deltaY < 0) prevSlide();
+    }, { passive: true });
+
+    const initialMatch = window.location.hash.match(/slide-(\d+)/);
+    if (initialMatch) {
+      const parsed = Number(initialMatch[1]) - 1;
+      if (!Number.isNaN(parsed) && parsed >= 0 && parsed < slides.length) {
+        setSlide(parsed, false);
+      } else {
+        setSlide(0, false);
+      }
+    } else {
+      setSlide(0, false);
+    }
+  </script>
+</body>
+</html>

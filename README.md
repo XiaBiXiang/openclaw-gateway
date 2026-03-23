@@ -206,3 +206,5 @@ The current implementation covers stage 0 and the first slice of stage 1:
 OpenClaw wiring notes live in [docs/openclaw.md](docs/openclaw.md).
 
 Further planning notes live in [docs/roadmap.md](docs/roadmap.md).
+
+Interactive presentation: [docs/presentation.html](docs/presentation.html)

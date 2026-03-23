@@ -1,5 +1,7 @@
 # OpenClaw Gateway
 
+[中文文档](README.zh-CN.md)
+
 OpenClaw Gateway is a local-first routing gateway for hybrid inference.
 
 The project sits between client applications and model providers, decides whether a request should stay on the device or be escalated to the cloud, and exposes a single OpenAI-compatible entrypoint to the caller.

@@ -4,9 +4,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/asleak/openclaw-gateway/internal/config"
-	"github.com/asleak/openclaw-gateway/internal/policy"
-	"github.com/asleak/openclaw-gateway/internal/session"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/config"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/policy"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/session"
 )
 
 type RequestContext struct {

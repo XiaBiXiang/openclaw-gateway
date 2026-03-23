@@ -3,8 +3,8 @@ package cloud
 import (
 	"time"
 
-	"github.com/asleak/openclaw-gateway/internal/config"
-	"github.com/asleak/openclaw-gateway/internal/providers"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/config"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/providers"
 )
 
 func NewProvider(cfg config.ProviderConfig) providers.Provider {

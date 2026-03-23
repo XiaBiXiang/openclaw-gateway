@@ -9,14 +9,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/asleak/openclaw-gateway/internal/config"
-	"github.com/asleak/openclaw-gateway/internal/providers"
-	cloudprovider "github.com/asleak/openclaw-gateway/internal/providers/cloud"
-	localprovider "github.com/asleak/openclaw-gateway/internal/providers/local"
-	"github.com/asleak/openclaw-gateway/internal/router"
-	"github.com/asleak/openclaw-gateway/internal/server"
-	"github.com/asleak/openclaw-gateway/internal/session"
-	"github.com/asleak/openclaw-gateway/internal/telemetry"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/config"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/providers"
+	cloudprovider "github.com/XiaBiXiang/openclaw-gateway/internal/providers/cloud"
+	localprovider "github.com/XiaBiXiang/openclaw-gateway/internal/providers/local"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/router"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/server"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/session"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/telemetry"
 )
 
 func main() {

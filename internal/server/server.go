@@ -12,11 +12,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/asleak/openclaw-gateway/internal/config"
-	"github.com/asleak/openclaw-gateway/internal/policy"
-	"github.com/asleak/openclaw-gateway/internal/providers"
-	"github.com/asleak/openclaw-gateway/internal/router"
-	"github.com/asleak/openclaw-gateway/internal/telemetry"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/config"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/policy"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/providers"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/router"
+	"github.com/XiaBiXiang/openclaw-gateway/internal/telemetry"
 )
 
 type application struct {

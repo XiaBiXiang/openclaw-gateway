@@ -2,7 +2,10 @@ BINARY=bin/openclaw-gateway
 CONFIG=configs/config.example.json
 IMAGE=openclaw-gateway:local
 
-.PHONY: build run test fmt docker-build compose-up compose-down clean
+.PHONY: build run test fmt setup docker-build compose-up compose-down clean
+
+setup:
+	@./scripts/setup.sh
 
 build:
 	mkdir -p bin

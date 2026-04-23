@@ -86,7 +86,7 @@ make setup
 For non-interactive mode (CI/CD, automation):
 
 ```bash
-LOCAL_ENABLED=true CLOUD_ENABLED=true CLOUD_API_KEY=sk-xxx ./scripts/setup.sh -y
+OCG_LOCAL_ENABLED=true OCG_CLOUD_ENABLED=true OCG_CLOUD_API_KEY=sk-xxx ./scripts/setup.sh -y
 ```
 
 ### Option 2: Manual setup

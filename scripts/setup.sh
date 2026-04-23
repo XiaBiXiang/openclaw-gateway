@@ -56,24 +56,24 @@ ${BOLD}Options:${RESET}
   -h, --help               Show this help message
 
 ${BOLD}Non-interactive environment variables:${RESET}
-  LOCAL_ENABLED            Enable local provider (true/false)
-  LOCAL_BASE_URL           Local provider base URL
-  LOCAL_MODEL              Local model name
-  LOCAL_API                Local API type (chat-completions/responses)
-  CLOUD_ENABLED            Enable cloud provider (true/false)
-  CLOUD_BASE_URL           Cloud provider base URL
-  CLOUD_MODEL              Cloud model name
-  CLOUD_API_KEY            Cloud API key (plain text)
-  CLOUD_API_KEY_ENV        Env var name for cloud API key
-  SERVER_PORT              Gateway listen port
-  LOG_LEVEL                Log level (debug/info/warn/error)
+  OCG_LOCAL_ENABLED        Enable local provider (true/false)
+  OCG_LOCAL_BASE_URL       Local provider base URL
+  OCG_LOCAL_MODEL          Local model name
+  OCG_LOCAL_API            Local API type (chat-completions/responses)
+  OCG_CLOUD_ENABLED        Enable cloud provider (true/false)
+  OCG_CLOUD_BASE_URL       Cloud provider base URL
+  OCG_CLOUD_MODEL          Cloud model name
+  OCG_CLOUD_API_KEY        Cloud API key (plain text)
+  OCG_CLOUD_API_KEY_ENV    Env var name for cloud API key
+  OCG_SERVER_PORT          Gateway listen port
+  OCG_LOG_LEVEL            Log level (debug/info/warn/error)
 
 ${BOLD}Examples:${RESET}
   # Interactive setup
   $(basename "$0")
 
   # Non-interactive with env vars
-  LOCAL_ENABLED=true CLOUD_ENABLED=true CLOUD_API_KEY=sk-xxx $(basename "$0") -y
+  OCG_LOCAL_ENABLED=true OCG_CLOUD_ENABLED=true OCG_CLOUD_API_KEY=sk-xxx $(basename "$0") -y
 
   # Configure and run immediately
   $(basename "$0") -y -r
@@ -92,19 +92,19 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ── Env var overrides (for non-interactive mode) ────────────────────
-LOCAL_ENABLED="${LOCAL_ENABLED:-${LOCAL_ENABLED}}"
-LOCAL_BASE_URL="${LOCAL_BASE_URL:-${LOCAL_BASE_URL}}"
-LOCAL_MODEL="${LOCAL_MODEL:-${LOCAL_MODEL}}"
-LOCAL_API="${LOCAL_API:-${LOCAL_API}}"
+LOCAL_ENABLED="${OCG_LOCAL_ENABLED:-${LOCAL_ENABLED}}"
+LOCAL_BASE_URL="${OCG_LOCAL_BASE_URL:-${LOCAL_BASE_URL}}"
+LOCAL_MODEL="${OCG_LOCAL_MODEL:-${LOCAL_MODEL}}"
+LOCAL_API="${OCG_LOCAL_API:-${LOCAL_API}}"
 
-CLOUD_ENABLED="${CLOUD_ENABLED:-${CLOUD_ENABLED}}"
-CLOUD_BASE_URL="${CLOUD_BASE_URL:-${CLOUD_BASE_URL}}"
-CLOUD_MODEL="${CLOUD_MODEL:-${CLOUD_MODEL}}"
-CLOUD_API_KEY="${CLOUD_API_KEY:-${CLOUD_API_KEY}}"
-CLOUD_API_KEY_ENV="${CLOUD_API_KEY_ENV:-${CLOUD_API_KEY_ENV}}"
+CLOUD_ENABLED="${OCG_CLOUD_ENABLED:-${CLOUD_ENABLED}}"
+CLOUD_BASE_URL="${OCG_CLOUD_BASE_URL:-${CLOUD_BASE_URL}}"
+CLOUD_MODEL="${OCG_CLOUD_MODEL:-${CLOUD_MODEL}}"
+CLOUD_API_KEY="${OCG_CLOUD_API_KEY:-${CLOUD_API_KEY}}"
+CLOUD_API_KEY_ENV="${OCG_CLOUD_API_KEY_ENV:-${CLOUD_API_KEY_ENV}}"
 
-SERVER_PORT="${SERVER_PORT:-${SERVER_PORT}}"
-LOG_LEVEL="${LOG_LEVEL:-${LOG_LEVEL}}"
+SERVER_PORT="${OCG_SERVER_PORT:-${SERVER_PORT}}"
+LOG_LEVEL="${OCG_LOG_LEVEL:-${LOG_LEVEL}}"
 
 # ── Helpers ─────────────────────────────────────────────────────────
 prompt_bool() {

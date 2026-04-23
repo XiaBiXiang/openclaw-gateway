@@ -74,7 +74,7 @@ make setup
 非交互模式（适用于 CI/CD、自动化场景）：
 
 ```bash
-LOCAL_ENABLED=true CLOUD_ENABLED=true CLOUD_API_KEY=sk-xxx ./scripts/setup.sh -y
+OCG_LOCAL_ENABLED=true OCG_CLOUD_ENABLED=true OCG_CLOUD_API_KEY=sk-xxx ./scripts/setup.sh -y
 ```
 
 ### 1. 从源码运行

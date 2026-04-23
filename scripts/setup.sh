@@ -116,9 +116,9 @@ prompt_bool() {
     default_hint="y/N"
   fi
   while true; do
-    printf "${CYAN}  ➜${RESET} ${label} [${default_hint}]: "
+    printf "${CYAN}  ➜${RESET} ${label} [${default_hint}]: " >&2
     read -r answer
-    answer="${answer,,}"
+    answer="$(echo "$answer" | tr '[:upper:]' '[:lower:]')"
     if [[ -z "$answer" ]]; then
       echo "$default"
       return
@@ -133,7 +133,7 @@ prompt_bool() {
 
 prompt_string() {
   local label="$1" default="$2"
-  printf "${CYAN}  ➜${RESET} ${label} [${default}]: "
+  printf "${CYAN}  ➜${RESET} ${label} [${default}]: " >&2
   read -r answer
   if [[ -z "$answer" ]]; then
     echo "$default"
@@ -147,19 +147,19 @@ prompt_choice() {
   local default="$1"; shift
   local options=("$@")
 
-  printf "${CYAN}  ➜${RESET} ${label}\n"
+  printf "${CYAN}  ➜${RESET} ${label}\n" >&2
   local i=1
   for opt in "${options[@]}"; do
     if [[ "$opt" == "$default" ]]; then
-      printf "    ${GREEN}%d) %s (default)${RESET}\n" "$i" "$opt"
+      printf "    ${GREEN}%d) %s (default)${RESET}\n" "$i" "$opt" >&2
     else
-      printf "    %d) %s\n" "$i" "$opt"
+      printf "    %d) %s\n" "$i" "$opt" >&2
     fi
     ((i++))
   done
 
   while true; do
-    printf "    Enter choice [1-%d]: " "${#options[@]}"
+    printf "    Enter choice [1-%d]: " "${#options[@]}" >&2
     read -r answer
     if [[ -z "$answer" ]]; then
       echo "$default"
@@ -228,7 +228,7 @@ if [[ "$NON_INTERACTIVE" == "false" ]]; then
     CLOUD_MODEL="$(prompt_string "Cloud model name" "$CLOUD_MODEL")"
     CLOUD_API="$(prompt_choice "Cloud API type" "$CLOUD_API" "chat-completions" "responses")"
 
-    printf "${CYAN}  ➜${RESET} Cloud API key (leave blank to use env var): "
+    printf "${CYAN}  ➜${RESET} Cloud API key (leave blank to use env var): " >&2
     read -r CLOUD_API_KEY_INPUT
     if [[ -n "$CLOUD_API_KEY_INPUT" ]]; then
       CLOUD_API_KEY="$CLOUD_API_KEY_INPUT"

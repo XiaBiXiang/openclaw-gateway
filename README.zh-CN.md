@@ -63,6 +63,20 @@ OpenClaw Gateway 是一个面向混合推理场景的本地优先路由网关。
 
 ## 快速开始
 
+### 一键配置（推荐）
+
+运行交互式配置脚本，自动引导你完成 provider 配置并生成配置文件：
+
+```bash
+make setup
+```
+
+非交互模式（适用于 CI/CD、自动化场景）：
+
+```bash
+LOCAL_ENABLED=true CLOUD_ENABLED=true CLOUD_API_KEY=sk-xxx ./scripts/setup.sh -y
+```
+
 ### 1. 从源码运行
 
 要求：

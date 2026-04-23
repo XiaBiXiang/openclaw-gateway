@@ -75,6 +75,22 @@ docs                   Product spec and architecture notes
 
 ## Quick start
 
+### Option 1: One-click setup (recommended)
+
+Run the interactive setup script — it will guide you through provider configuration and generate the config file automatically:
+
+```bash
+make setup
+```
+
+For non-interactive mode (CI/CD, automation):
+
+```bash
+LOCAL_ENABLED=true CLOUD_ENABLED=true CLOUD_API_KEY=sk-xxx ./scripts/setup.sh -y
+```
+
+### Option 2: Manual setup
+
 1. Copy `configs/config.example.json` to a local config file.
 2. Point the local provider at your OpenClaw OpenAI-compatible endpoint.
 3. Export the cloud provider API key if you want cloud fallback.
